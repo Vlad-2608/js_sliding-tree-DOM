@@ -25,10 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
               grandchild.nodeType === Node.TEXT_NODE &&
               grandchild.textContent.trim() !== ''
             ) {
-              const span = document.createElement('span');
+              if (grandchild.parentNode.tagName !== 'SPAN') {
+                const span = document.createElement('span');
 
-              span.textContent = grandchild.textContent;
-              grandchild.replaceWith(span);
+                span.textContent = grandchild.textContent;
+                grandchild.replaceWith(span);
+              }
             }
           });
         } else {
