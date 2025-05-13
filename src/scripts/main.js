@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = evt.target;
 
     if (target.tagName === 'SPAN') {
-      const parenLi = target.parentNode;
-      const sublist = parenLi.querySelector('ul');
+      const parentLi = target.parentNode;
+      const sublist = parentLi.querySelector('ul');
 
       if (sublist) {
         sublist.style.display = sublist.style.display === 'none' ? '' : 'none';
@@ -18,16 +18,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function wrapTextNodes(node) {
     node.childNodes.forEach((child) => {
-      if (
-        child.nodeType === Node.TEXT_NODE &&
-        child.textContent.trim() !== ''
-      ) {
-        const span = document.createElement('span');
+      if (child.nodeType === Node.ELEMENT_NODE) {
+        if (child.tagName === 'LI' && child.querySelector('ul')) {
+          child.childNodes.forEach((grandchild) => {
+            if (
+              grandchild.nodeType === Node.TEXT_NODE &&
+              grandchild.textContent.trim() !== ''
+            ) {
+              const span = document.createElement('span');
 
-        span.textContent = child.textContent;
-        child.replaceWith(span);
-      } else if (child.nodeType === Node.ELEMENT_NODE) {
-        wrapTextNodes(child);
+              span.textContent = grandchild.textContent;
+              grandchild.replaceWith(span);
+            }
+          });
+        } else {
+          wrapTextNodes(child);
+        }
       }
     });
   }
